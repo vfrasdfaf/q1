@@ -1,0 +1,33 @@
+[
+    {
+        "id": "user_68542544576867.85429126",
+        "username": "1",
+        "password": "123456",
+        "role": "admin",
+        "failed_attempts": 0,
+        "last_attempt_time": 0,
+        "is_locked": false,
+        "last_login_time": 1750345219
+    },
+    {
+        "id": "user_685425c0e70189.07366249",
+        "username": "qwe",
+        "password": "123456",
+        "role": "user",
+        "failed_attempts": 3,
+        "last_attempt_time": 1750345211,
+        "is_locked": true,
+        "last_login_time": 1750345161,
+        "lock_reason": "attempts"
+    },
+    {
+        "id": "user_685425de034886.98317486",
+        "username": "admin",
+        "password": "123456",
+        "role": "user",
+        "failed_attempts": 0,
+        "last_attempt_time": 0,
+        "is_locked": false,
+        "last_login_time": 1750345185
+    }
+]
