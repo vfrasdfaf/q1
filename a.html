@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Авторизация</title>
+</head>
+<body>
+
+    <h1>Авторизация</h1>
+
+    <input type="text" id="login" placeholder="Логин"><br>
+    <input type="password" id="password" placeholder="Пароль"><br>
+    <button onclick="login()">Войти</button>
+
+    <div id="message"></div>
+
+    <script>
+         // Получаем данные о пользователях из localStorage (если есть)
+        let usersData = localStorage.getItem("users");
+        let users = usersData ? JSON.parse(usersData) : {
+            "admin": { password: "123", attempts: 0, blocked: false },
+            "user": { password: "456", attempts: 0, blocked: false }
+        };
+
+        function login() {
+            var loginInput = document.getElementById("login").value;
+            var passwordInput = document.getElementById("password").value;
+            var messageDiv = document.getElementById("message");
+
+            if (users[loginInput]) {
+                var user = users[loginInput];
+
+                if (user.blocked) {
+                    messageDiv.textContent = "Вы заблокированы. Обратитесь к администратору.";
+                } else {
+                    if (user.password === passwordInput) {
+                        messageDiv.textContent = "Успешная авторизация!";
+                        user.attempts = 0;
+                        // Сохраняем обновленные данные в localStorage
+                        localStorage.setItem("users", JSON.stringify(users));
+                    } else {
+                        user.attempts++;
+                        if (user.attempts >= 3) {
+                            user.blocked = true;
+                            messageDiv.textContent = "Вы заблокированы. Обратитесь к администратору.";
+                            // Сохраняем обновленные данные в localStorage
+                            localStorage.setItem("users", JSON.stringify(users));
+                        } else {
+                            messageDiv.textContent = "Неверный логин или пароль! Попыток: " + user.attempts;
+                        }
+                    }
+                }
+            } else {
+                messageDiv.textContent = "Неверный логин или пароль!";
+            }
+        }
+    </script>
+
+</body>
+</html>
