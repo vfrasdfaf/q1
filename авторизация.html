@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<title>Даньшин демоэкзамен</title>
+<style>
+  body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: #f5f0e6;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+  }
+  h1 {
+    text-align: center;
+    color: #000000;
+    margin-bottom: 20px;
+  }
+  /* Навигация */
+  .nav-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    
+  }
+  button {
+    background-color: #8D6E63;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+  button:hover {
+    background-color: #18993e;
+  }
+
+  /* Общие стили разделов */
+  .section {
+    display: none;
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .section.active {
+    display: block;
+  }
+
+  /* Заголовки разделов */
+  h2 {
+    text-align: center;
+    color: #000000;
+    margin-bottom: 20px;
+}
+
+ /* Формы и элементы */
+ form {
+   display:flex; 
+   flex-direction:column; 
+   gap:10px; 
+}
+
+ input[type=text], input[type=password], select {
+   padding:10px; 
+   border-radius:5px; 
+   border:none; 
+   box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+ }
+
+ button[type=submit] {
+   background-color:#00a143; 
+   color:#fff; 
+   border:none; 
+   padding:12px; 
+   border-radius:5px; 
+   cursor:pointer; 
+   font-weight:bold; 
+   transition:.3s background-color ;
+ }
+ button[type=submit]:hover {
+   background-color:#00a143 ;
+ }
+
+ /* Таблица управления пользователями */
+ table {
+   width:auto; 
+   margin-top:auto; 
+   border-collapse:collapse; 
+}
+ th, td {
+   padding:10px; 
+   border-bottom:1px solid #00a143; 
+}
+ th {
+   background-color:#00a143 ;
+}
+ td button {
+   margin-right:auto; 
+}
+
+/* Стиль для изображений (если добавлять) */
+img.header-img {
+ max-width:auto; 
+ width:auto; 
+ height:auto; 
+ display:block; 
+ margin:auto; 
+
+}
+</style>
+</head>
+<body>
+
+<h1>Вход в сервис аренды машины</h1>
+
+<!-- Навигация -->
+<div class="nav-buttons">
+ <button onclick="showSection('login')">Вход</button>
+ <button onclick="showSection('password')">Смена пароля</button>
+ <button onclick="showSection('users')">Управление пользователями</button>
+</div>
+
+<!-- Раздел входа -->
+<div id="login" class="section active">
+<h2>Войти в систему</h2>
+<form id="loginForm">
+ <label>Логин:</label>
+ <input type="text" id="loginInput" placeholder="Введите логин" required />
+
+ <label>Пароль:</label>
+ <input type="password" id="passwordInput" placeholder="Введите пароль" required />
+
+ <button type="submit">Войти</button>
+</form>
+<div id="loginMessage"></div>
+<button style="margin-top: 10px;background-color:#00a143;" onclick="simulateLogin()">Для теста — войти как админ</button>
+</div>
+
+<!-- Раздел смены пароля -->
+<div id="password" class="section">
+<h2>Смена пароля</h2>
+<form id="changePasswordForm">
+ <label>Текущий пароль:</label>
+ <input type="password" id="currentPassword" placeholder="Текущий пароль" required />
+
+ <label>Новый пароль:</label>
+ <input type="password" id="newPassword" placeholder="Новый пароль" required />
+
+ <label>Подтверждение нового пароля:</label>
+ <input type="password" id="confirmPassword" placeholder="Подтвердите новый пароль" required />
+
+ <button type="submit">Обновить пароль</button>
+</form>
+<div id="passwordResult"></div>
+</div>
+
+<!-- Раздел управления пользователями -->
+<div id="users" class="section">
+<h2 style='text-align:center;'>Пользователи системы</h2>
+
+<table id='usersTable'>
+<tr><th>Логин</th><th>Роль</th><th>Заблокирован</th><th>Действия</th></tr>
+
+<tr data-login='admin'>
+<td>admin</td><td>Администратор</td><td>false</td>
+<td style='white-space:no-wrap'>
+<button onclick='blockUser(this)'>Заблокировать/Разблокировать</button>
+<button onclick='deleteUser(this)'>Удалить</button></td></tr>
+
+<tr data-login='user1'>
+<td>user1</td><td>Пользователь</td><td>false</td>
+<td style='white-space:no-wrap'>
+<button onclick='blockUser(this)'>Заблокировать/Разблокировать</button>
+<button onclick='deleteUser(this)'>Удалить</button></td></tr>
+</table>
+
+<h3 style='margin-top:20px;'>Добавить нового пользователя</h3>
+<form id='addUserForm'>
+<label>Логин:</label><input type=text id='addLogin' placeholder='Логин' required />
+<label>Роль:</label>
+<select id='addRole'>
+<option value='Пользователь'>Пользователь</option>
+<option value='Администратор'>Администратор</option></select >
+<button type='submit'>Добавить пользователя</button>
+<div id='addUserMsg'></div>
+</form>
+
+<!-- Для теста — кнопка выхода из системы -->
+<button style='margin-top:20px;background-color:#00a143;' onclick='logout()'>Выйти из системы (тест)</button>
+
+<div id='userStatus' style='margin-top:10px;font-weight:bold;text-align:center'></div>
+
+<script>
+// Переключение разделов
+function showSection(id) {
+ document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+}
+
+// Вход в систему (имитация)
+let currentUser = null;
+
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+ e.preventDefault();
+ const login = document.getElementById('loginInput').value.trim();
+ const password = document.getElementById('passwordInput').value.trim();
+ // Тут должна быть проверка на сервере
+ // Для теста — любой логин/пароль
+ currentUser = login;
+ document.getElementById('loginMessage').innerText = 'Вы вошли как ' + login;
+
+ if (login === 'admin') {
+ showSection('users');
+ document.getElementById('userStatus').innerText = 'Статус : Администратор';
+ } else {
+ showSection('password');
+ document.getElementById('userStatus').innerText = 'Статус : Пользователь';
+ }
+});
+
+// Тестовая функция для входа как админ
+function simulateLogin() {
+ currentUser = 'admin';
+ document.getElementById('loginMessage').innerText = 'Вы вошли как admin';
+ showSection('users');
+ document.getElementById('userStatus').innerText = 'Статус : Администратор';
+}
+
+// Выйти из системы
+function logout() {
+ currentUser = null;
+ document.getElementById('loginMessage').innerText = '';
+ showSection('login');
+}
+
+// Обработка смены пароля
+document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
+ e.preventDefault();
+ const currentPwd = document.getElementById('currentPassword').value.trim();
+ const newPwd = document.getElementById('newPassword').value.trim();
+ const confirmPwd = document.getElementById('confirmPassword').value.trim();
+
+ if (newPwd !== confirmPwd) {
+ document.getElementById('passwordResult').innerText = 'Пароли не совпадают.';
+ return;
+ }
+
+ // Тут должна быть проверка текущего пароля и обновление на сервере
+ // Для теста — просто сообщение
+ document.getElementById('passwordResult').innerText = 'Пароль успешно изменен.';
+});
+
+// Обработка добавления пользователя
+document.getElementById('addUserForm').addEventListener('submit', function(e) {
+ e.preventDefault();
+ const login = document.getElementById('addLogin').value.trim();
+ const role = document.getElementById('addRole').value;
+
+ // Проверка уникальности логина могла бы быть тут
+ // Добавляем новую строку в таблицу
+ const table = document.getElementById('usersTable');
+ const newRow = table.insertRow(-1);
+ newRow.setAttribute('data-login', login);
+    
+ newRow.insertCell(0).innerText = login;
+ newRow.insertCell(1).innerText = role;
+
+ // Статус блокировки по умолчанию false
+ newRow.insertCell(2).innerText = 'false';
+
+ const actionsCell=newRow.insertCell(3);
+  
+ const btnBlock=document.createElement('button');
+ btnBlock.innerText='Заблокировать/Разблокировать';
+ btnBlock.onclick=function(){ blockUser(btnBlock); };
+  
+ const btnDelete=document.createElement('button');
+ btnDelete.innerText='Удалить';
+ btnDelete.onclick=function(){ deleteUser(btnDelete); };
+  
+ actionsCell.appendChild(btnBlock);
+ actionsCell.appendChild(btnDelete);
+
+ document.getElementById('addUserMsg').innerText='Пользователь '+login+' добавлен.';
+ // Очистка формы
+ document.getElementById('addUserForm').reset();
+});
+
+// Функции для управления пользователями
+function blockUser(btn) {
+ const row=btn.closest("tr");
+ let blocked= row.cells[2].innerText==='true';
+ blocked=!blocked;
+ row.cells[2].innerText=blocked?'true':'false';
+ alert(`Пользователь ${row.cells[0].innerText} ${blocked?'заблокирован':'разблокирован'}`);
+}
+
+function deleteUser(btn) {
+ if(confirm("Удалить этого пользователя?")) {
+     const row=btn.closest("tr");
+     row.remove();
+     alert("Пользователь удален");
+ }
+}
+</script>
+
+<style>#userStatus {margin-top:10px;font-weight:bold;text-align:center;}</style>
+
+<script>
+// Изначально показываем раздел входа, остальные скрыты (по умолчанию)
+showSection='showSection'; // объявление функции уже есть выше, так что всё в порядке.
